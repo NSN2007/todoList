@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 const fs = require('fs');
-var todo = fs.readFileSync("todo.json") || [];
 const port = 80;
+var todo = JSON.parse(fs.readFileSync("todo.json")) || [];
 
 app.use(express.static('public'));
 app.use(express.json());
