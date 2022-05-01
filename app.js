@@ -1,34 +1,23 @@
 const express = require('express');
 const app = express();
 const fs = require('fs');
-const port = 80
+var todo = fs.readFileSync("todo.json") || [];
+const port = 80;
 
-app.use(express.static('public'))
-
+app.use(express.static('public'));
 app.use(express.json());
 
-const path = "./mytodolist.txt";
-
 app.post('/test', (req, res) => {
-    console.log("api shit")
+    if(!req.body.todo || req.body.todo.length < 1) return res.status(400).send("Missing parameter");
 
-    fs.exists(path, function (isExist) {
-        if (isExist) {
-            let content = req.body.todo;
-            content = `\n${content}`;
-            fs.appendFile(path, content, (err) => {
-                if (err) throw err;
-                console.log('Adding task to todo-list...')
-            });
-        } else {
-            fs.appendFile('mytodolist.txt', req.body.todo, function (err) {
-                if (err) throw err;
-                console.log('Todo-list created...');
-            });
-        }
-    });
+    todo.push(req.body.todo);
+    fs.writeFileSync("todo.json", JSON.stringify(todo), { flag: "a+" });
+});
+
+app.get("/todo", (req, res) => {
+    res.json(todo);
 });
 
 app.listen(port, () => {
-    console.log(`${port}`)
+    console.log(port);
 });
