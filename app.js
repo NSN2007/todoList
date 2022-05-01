@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const port = 80;
-var todo = JSON.parse(fs.readFileSync("todo.json")) || [];
+var todo = fs.existsSync("todo.json") ? JSON.parse(fs.readFileSync("todo.json")) : [];
 
 app.use(express.static('public'));
 app.use(express.json());
